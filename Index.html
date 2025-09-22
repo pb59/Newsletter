@@ -1,422 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Report: SQL Query Generator and Executor Chatbot</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Chosen Palette: Calm Neutrals -->
-    <!-- Application Structure Plan: The SPA is designed as a single-page, vertical scrolling narrative to guide users logically through the chatbot's story. It starts with a Hero section to define the product, followed by "The Why" which combines the problem and benefits for a strong value proposition. The centerpiece is an interactive "How It Works" diagram that replaces the static list from the report, making the architecture explorable. This is followed by a "Features & Tech" section using a modern card-based grid for scannability. An animated "Demo" section simulates the chat interface to show the product in action. Finally, a "Roadmap" visualizes future plans. This thematic structure is more engaging and user-friendly than the original linear slide format, encouraging discovery. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: 'How It Works' process (Slide 6). Goal: Organize & Inform. Viz/Presentation: Interactive flowchart using HTML/CSS/JS. Interaction: Clickable steps reveal detailed text. Justification: More engaging than a static list. Library/Method: Vanilla JS + Tailwind.
-        - Report Info: Features & Tech Stack (Slides 4, 5). Goal: Inform & Organize. Viz/Presentation: Grid of cards. Interaction: Hover effects for visual feedback. Justification: Modern, scannable format. Library/Method: HTML/CSS + Tailwind.
-        - Report Info: Demo Scenarios (Slide 7). Goal: Inform & Engage. Viz/Presentation: Animated mock chat interface. Interaction: Buttons trigger JS to simulate a live chat. Justification: Visually demonstrates the product's use case effectively. Library/Method: Vanilla JS + Tailwind.
-        - Report Info: Future Enhancements (Slide 9). Goal: Inform. Viz/Presentation: Vertical timeline. Interaction: None, purely visual. Justification: Clear, standard way to show a roadmap. Library/Method: HTML/CSS + Tailwind.
-        - Note: The source report contains no quantitative data, so no charts (Chart.js) were implemented. The library is included for future compatibility.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
+    <title>Your Name - Resume</title>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F5F5F4; /* stone-100 */
-            color: #292524; /* stone-800 */
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            color: #222;
+            margin: 0;
+            padding: 0;
         }
-        .nav-link {
-            transition: color 0.3s ease;
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 32px;
         }
-        .nav-link:hover {
-            color: #14B8A6; /* teal-500 */
+        h1 {
+            margin-top: 0;
+            color: #2d6a4f;
         }
-        .section-active {
-            color: #14B8A6 !important;
-            font-weight: 600;
+        .section {
+            margin-bottom: 30px;
         }
-        .flow-step {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
+        .section h2 {
+            color: #40916c;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 3px;
         }
-        .flow-step-active {
-            border-color: #14B8A6 !important; /* teal-500 */
-            background-color: #F0FDFA !important; /* teal-50 */
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        .chat-bubble {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .chat-bubble.visible {
-            opacity: 1;
-            transform: translateY(0);
+        ul {
+            padding-left: 20px;
         }
     </style>
 </head>
-<body class="antialiased">
-
-    <header id="header" class="bg-stone-100/80 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold text-stone-800">SQL Chatbot</div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#why" class="nav-link text-stone-600">Why It Matters</a>
-                <a href="#how" class="nav-link text-stone-600">How It Works</a>
-                <a href="#features" class="nav-link text-stone-600">Features</a>
-                <a href="#demo" class="nav-link text-stone-600">Demo</a>
-                <a href="#future" class="nav-link text-stone-600">Roadmap</a>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <section id="hero" class="py-20 md:py-32">
-            <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-stone-900">
-                    Empowering Data Access Through <span class="text-teal-600">Natural Language</span>
-                </h1>
-                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-stone-600">
-                    Our interactive chatbot transforms your plain-English questions into executable SQL queries, providing instant insights from your database without writing a single line of code.
-                </p>
-                <div class="mt-10">
-                    <a href="#how" class="bg-teal-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-teal-700 transition-all">
-                        See How It Works
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="why" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">Bridging the SQL Gap</h2>
-                    <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">We're democratizing data exploration, turning a common business bottleneck into an opportunity for efficiency and empowerment.</p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-stone-800 mb-4">The Challenge</h3>
-                        <p class="text-stone-600 leading-relaxed">
-                            Many business users need critical data insights to make informed decisions, but lack the technical expertise to write SQL queries. This creates a reliance on data analysts for every request, leading to delays and frustrating bottlenecks that slow down the entire organization.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-stone-800 mb-4">Our Solution & Its Benefits</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <span class="text-teal-500 mr-3 mt-1">&#10004;</span>
-                                <span class="text-stone-600"><strong class="font-semibold text-stone-700">Increased Productivity:</strong> Get answers in seconds, not hours. Business users are empowered to self-serve their data needs.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-500 mr-3 mt-1">&#10004;</span>
-                                <span class="text-stone-600"><strong class="font-semibold text-stone-700">Empowered Decision-Making:</strong> Faster access to data leads to more agile and informed business strategies.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-500 mr-3 mt-1">&#10004;</span>
-                                <span class="text-stone-600"><strong class="font-semibold text-stone-700">Reduced Burden on Data Teams:</strong> Free up your data experts to focus on complex analysis and strategic initiatives instead of routine queries.</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="how" class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">From Question to Answer</h2>
-                    <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">Our system follows a sophisticated, multi-step process to ensure accuracy and efficiency. Click on any step below to learn more about how it works.</p>
-                </div>
-                <div class="grid lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1 space-y-4">
-                        <div id="step-1" class="flow-step border-2 border-stone-200 p-4 rounded-lg bg-white shadow-sm flow-step-active">
-                            <h4 class="font-semibold text-stone-800">1. User Input</h4>
-                            <p class="text-sm text-stone-500">The user asks a question in natural language.</p>
-                        </div>
-                        <div class="h-8 w-px bg-stone-300 mx-auto"></div>
-                        <div id="step-2" class="flow-step border-2 border-stone-200 p-4 rounded-lg bg-white shadow-sm">
-                            <h4 class="font-semibold text-stone-800">2. Prioritized Search</h4>
-                            <p class="text-sm text-stone-500">System checks for known question patterns.</p>
-                        </div>
-                        <div class="h-8 w-px bg-stone-300 mx-auto"></div>
-                        <div id="step-3" class="flow-step border-2 border-stone-200 p-4 rounded-lg bg-white shadow-sm">
-                            <h4 class="font-semibold text-stone-800">3. LLM Query Generation</h4>
-                            <p class="text-sm text-stone-500">If no match, the AI generates a new SQL query.</p>
-                        </div>
-                        <div class="h-8 w-px bg-stone-300 mx-auto"></div>
-                        <div id="step-4" class="flow-step border-2 border-stone-200 p-4 rounded-lg bg-white shadow-sm">
-                            <h4 class="font-semibold text-stone-800">4. SQL Execution</h4>
-                            <p class="text-sm text-stone-500">The query is run against the database.</p>
-                        </div>
-                        <div class="h-8 w-px bg-stone-300 mx-auto"></div>
-                        <div id="step-5" class="flow-step border-2 border-stone-200 p-4 rounded-lg bg-white shadow-sm">
-                            <h4 class="font-semibold text-stone-800">5. Result Display</h4>
-                            <p class="text-sm text-stone-500">Results are formatted and shown to the user.</p>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-2 bg-white p-8 rounded-lg shadow-lg min-h-[300px]">
-                        <div id="step-details">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="features" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">Core Capabilities & Technology</h2>
-                    <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">Powered by a modern tech stack designed for intelligence, speed, and scalability.</p>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Natural Language to SQL</h4>
-                        <p class="text-stone-600">Converts plain English questions into precise, executable SQL queries.</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Direct Query Execution</h4>
-                        <p class="text-stone-600">Runs generated SQL against the SQLite database instantly.</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Interactive Chat UI</h4>
-                        <p class="text-stone-600">Built with Streamlit, providing a user-friendly interface and session history.</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Intelligent Follow-ups</h4>
-                        <p class="text-stone-600">Understands context to accurately respond to subsequent questions.</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Example-Based Learning</h4>
-                        <p class="text-stone-600">Uses ChromaDB and semantic search to improve accuracy with examples.</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
-                        <h4 class="font-bold text-lg text-teal-700 mb-2">Groq & LLM Power</h4>
-                        <p class="text-stone-600">Leverages the speed of Groq and the power of Llama3 for rapid SQL generation.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="demo" class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">See It In Action</h2>
-                    <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">Experience the chatbot's conversational flow. Click a scenario to watch it unfold.</p>
-                </div>
-
-                <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl flex flex-col h-[60vh]">
-                    <div class="p-4 border-b border-stone-200 bg-stone-50 rounded-t-xl">
-                        <h4 class="font-semibold text-center text-stone-700">Chatbot Demo</h4>
-                    </div>
-                    <div id="chat-window" class="flex-1 p-6 overflow-y-auto space-y-4">
-                        <!-- Chat messages will be appended here -->
-                    </div>
-                    <div class="p-4 border-t border-stone-200 bg-stone-100 rounded-b-xl">
-                        <div class="flex justify-center space-x-2 md:space-x-4">
-                             <button onclick="runScenario(1)" class="text-sm bg-teal-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-teal-700 transition-all">Basic Query</button>
-                             <button onclick="runScenario(2)" class="text-sm bg-teal-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-teal-700 transition-all">Follow-up</button>
-                             <button onclick="runScenario(3)" class="text-sm bg-teal-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-teal-700 transition-all">Schema Inquiry</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="future" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">The Road Ahead</h2>
-                    <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">We are continuously evolving. Here's a look at what's next for the SQL Chatbot.</p>
-                </div>
-                <div class="relative max-w-2xl mx-auto">
-                    <div class="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-stone-200"></div>
-                    <div class="space-y-12">
-                        <div class="relative pl-8 md:pl-0">
-                             <div class="md:text-right md:pr-8">
-                                <h4 class="font-bold text-lg text-teal-700 mb-1">Multi-Database Support</h4>
-                                <p class="text-stone-600">Extend compatibility beyond SQLite to include PostgreSQL, MySQL, and more.</p>
-                            </div>
-                            <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-teal-600 border-4 border-white"></div>
-                        </div>
-                         <div class="relative pl-8">
-                             <div class="md:pl-8">
-                                <h4 class="font-bold text-lg text-teal-700 mb-1">Integrated Data Visualization</h4>
-                                <p class="text-stone-600">Automatically generate charts and graphs from query results using Plotly or Chart.js.</p>
-                            </div>
-                            <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-teal-600 border-4 border-white"></div>
-                        </div>
-                        <div class="relative pl-8 md:pl-0">
-                             <div class="md:text-right md:pr-8">
-                                <h4 class="font-bold text-lg text-teal-700 mb-1">Enhanced AI Capabilities</h4>
-                                <p class="text-stone-600">Improve handling of complex joins, aggregations, and error self-correction.</p>
-                            </div>
-                            <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-teal-600 border-4 border-white"></div>
-                        </div>
-                        <div class="relative pl-8">
-                             <div class="md:pl-8">
-                                <h4 class="font-bold text-lg text-teal-700 mb-1">User Feedback & Security</h4>
-                                <p class="text-stone-600">Implement a feedback loop for query accuracy and add robust authentication/authorization.</p>
-                            </div>
-                            <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-teal-600 border-4 border-white"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer class="bg-stone-800 text-stone-300 py-12">
-        <div class="container mx-auto px-6 text-center">
-            <p class="text-xl font-semibold">Ready to Democratize Your Data?</p>
-            <p class="mt-2 text-stone-400">This interactive report showcases the power and potential of the SQL Chatbot.</p>
+<body>
+    <div class="container">
+        <h1>Your Name</h1>
+        <p><strong>Email:</strong> your.email@example.com<br>
+        <strong>Phone:</strong> +1-234-567-8901<br>
+        <strong>Location:</strong> Your City, Country</p>
+        
+        <div class="section">
+            <h2>Summary</h2>
+            <p>Brief summary about your professional background and skills.</p>
         </div>
-    </footer>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
         
-        const sections = document.querySelectorAll('main section[id]');
-        const navLinks = document.querySelectorAll('header nav a');
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.5
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.remove('section-active', 'text-teal-600');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('section-active', 'text-teal-600');
-                        }
-                    });
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => {
-            observer.observe(section);
-        });
+        <div class="section">
+            <h2>Experience</h2>
+            <ul>
+                <li>
+                    <strong>Job Title</strong> at Company Name<br>
+                    <em>Month YYYY – Month YYYY</em><br>
+                    - Key responsibility or achievement<br>
+                    - Another achievement
+                </li>
+                <!-- Add more jobs as needed -->
+            </ul>
+        </div>
         
-        const stepDetailsContent = {
-            'step-1': {
-                title: '1. User Input & Context',
-                description: 'The process begins when a user types a question in plain English. The application captures this input and, if it\'s a follow-up question, combines it with the context from the previous interaction to better understand the user\'s intent.'
-            },
-            'step-2': {
-                title: '2. Prioritized Search for Known Patterns',
-                description: 'Before involving the AI, the system performs a high-speed search. It first uses semantic search (ChromaDB) and then string similarity to check if the user\'s question matches any pre-defined examples in our `prompts.jsonl` file. If a high-confidence match is found, the system uses the proven, pre-written SQL query for maximum accuracy and speed.'
-            },
-            'step-3': {
-                title: '3. LLM-Powered Query Generation',
-                description: 'If no existing pattern matches, the query is passed to the Large Language Model (Groq Llama3). The LLM receives the user\'s question along with the database schema (table names, columns, etc.). This context allows the AI to generate a new, optimized, and syntactically correct SQL query tailored to the specific request.'
-            },
-            'step-4': {
-                title: '4. Secure SQL Execution',
-                description: 'The generated SQL query (whether from a known pattern or the LLM) is then executed directly against the connected SQLite database. The system uses SQLAlchemy to handle the connection and execution securely and efficiently.'
-            },
-            'step-5': {
-                title: '5. Result Formatting and Display',
-                description: 'The raw data returned from the database is processed using the pandas library and formatted into a clean, readable table. This final result is then displayed to the user within the Streamlit chat interface, completing the request-response cycle in seconds.'
-            }
-        };
-
-        const flowSteps = document.querySelectorAll('.flow-step');
-        const detailsContainer = document.getElementById('step-details');
-
-        function updateDetails(stepId) {
-            const content = stepDetailsContent[stepId];
-            detailsContainer.innerHTML = `
-                <h3 class="text-2xl font-bold text-teal-600 mb-4">${content.title}</h3>
-                <p class="text-stone-600 leading-relaxed">${content.description}</p>
-            `;
-            flowSteps.forEach(step => {
-                step.classList.remove('flow-step-active');
-                if (step.id === stepId) {
-                    step.classList.add('flow-step-active');
-                }
-            });
-        }
-
-        flowSteps.forEach(step => {
-            step.addEventListener('click', () => {
-                updateDetails(step.id);
-            });
-        });
-
-        updateDetails('step-1');
-    });
-
-    const scenarios = {
-        1: [
-            { from: 'user', text: 'What are the sales amounts for each product?' },
-            { from: 'agent', text: 'Okay, generating the SQL for that...' },
-            { from: 'agent', isCode: true, text: 'SELECT "Product"."Product Name", SUM("Sales"."Amount") \nFROM "Sales" \nJOIN "Product" ON "Sales"."Product ID" = "Product"."Product ID" \nGROUP BY "Product"."Product Name";' },
-            { from: 'agent', isTable: true }
-        ],
-        2: [
-            { from: 'user', text: 'Show me the top 5 products by revenue.' },
-            { from: 'agent', text: 'Certainly. Here are the top 5 products.'},
-            { from: 'user', text: 'And what about their locations?' },
-            { from: 'agent', text: 'Understood. Using the previous context to find their locations...' },
-            { from: 'agent', isCode: true, text: 'SELECT p."Product Name", l."City", l."State" \nFROM "Sales" s \nJOIN "Product" p ON s."Product ID" = p."Product ID" \nJOIN "Location" l ON s."Location ID" = l."Location ID" \nWHERE p."Product Name" IN (...) \nGROUP BY p."Product Name", l."City", l."State";' },
-        ],
-        3: [
-            { from: 'user', text: 'What tables are in the database?' },
-            { from: 'agent', text: 'Here is the database schema:' },
-            { from: 'agent', isMarkdown: true, text: '**Database Tables and Columns:**\n- **Location**: `Location ID`, `City`, `State`\n- **Product**: `Product ID`, `Product Name`, `Category`\n- **Sales**: `Sale ID`, `Product ID`, `Location ID`, `Date`, `Amount`' },
-        ]
-    };
-
-    let isScenarioRunning = false;
-
-    function runScenario(scenarioId) {
-        if (isScenarioRunning) return;
-        isScenarioRunning = true;
-
-        const chatWindow = document.getElementById('chat-window');
-        chatWindow.innerHTML = '';
-        const messages = scenarios[scenarioId];
-        let delay = 0;
-
-        messages.forEach((msg, index) => {
-            setTimeout(() => {
-                const bubble = document.createElement('div');
-                bubble.className = `chat-bubble max-w-lg md:max-w-xl ${msg.from === 'user' ? 'ml-auto' : 'mr-auto'}`;
-
-                let content = '';
-                if (msg.isCode) {
-                    content = `<div class="bg-stone-800 text-stone-100 p-4 rounded-lg text-sm font-mono overflow-x-auto"><pre><code>${msg.text}</code></pre></div>`;
-                } else if (msg.isTable) {
-                    content = `<div class="p-4 rounded-lg ${msg.from === 'user' ? 'bg-teal-600 text-white' : 'bg-stone-200 text-stone-800'}">Here are the results: <div class="mt-2 p-2 bg-white rounded shadow-inner text-sm">A data table would be displayed here.</div></div>`;
-                } else if (msg.isMarkdown) {
-                     content = `<div class="p-4 rounded-lg bg-stone-200 text-stone-800 space-y-2">${msg.text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code class="bg-stone-300 text-stone-900 px-1 rounded">$1</code>')}</div>`;
-                } else {
-                    content = `<div class="p-4 rounded-lg ${msg.from === 'user' ? 'bg-teal-600 text-white' : 'bg-stone-200 text-stone-800'}">${msg.text}</div>`;
-                }
-                
-                bubble.innerHTML = content;
-                chatWindow.appendChild(bubble);
-
-                setTimeout(() => bubble.classList.add('visible'), 50);
-
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-
-                if (index === messages.length - 1) {
-                    isScenarioRunning = false;
-                }
-            }, delay);
-            delay += msg.from === 'user' ? 800 : 1200;
-        });
-    }
-</script>
-
+        <div class="section">
+            <h2>Education</h2>
+            <ul>
+                <li>
+                    <strong>Degree</strong>, University Name<br>
+                    <em>Year of Graduation</em>
+                </li>
+                <!-- Add more education as needed -->
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Skills</h2>
+            <ul>
+                <li>Skill One</li>
+                <li>Skill Two</li>
+                <li>Skill Three</li>
+                <!-- Add more skills as needed -->
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
